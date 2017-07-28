@@ -50,8 +50,27 @@ function parseWhere(part, options)
             break;
         }
         break;
+      case "include_retweets":
+        switch (part.operator.toLowerCase())
+        {
+            case "=":
+              options.include_rts = toBoolean(part.right.value);
+        }
+        break;
+      case "exclude_replies":
+          switch (part.operator.toLowerCase())
+          {
+              case "=":
+                options.exclude_replies = toBoolean(part.right.value);
+          }
+          break;
     }
   }
+}
+
+function toBoolean(value)
+{
+  return (value == 'true' || value == '1');
 }
 
 console.log(twit_options)
