@@ -17,7 +17,13 @@ var config = require('./.config')
 
 var T = new Twit(config.twitter);
 var table = []
-var twit_options = {screen_name: astObj.from[0]['table']};
+var endpoint = "statuses/home_timeline";
+var twit_options = {};
+if (astObj.from[0]['table'].toLowerCase() != "home")
+{
+    endpoint = "statuses/user_timeline";
+    twit_options.screen_name = astObj.from[0]['table'];
+}
 
 if (astObj.where != null)
 {
