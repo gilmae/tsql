@@ -1,6 +1,6 @@
 {
   "name": "twsql",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Twitter client that uses sql commands rather than a stream",
   "main": "twsql.js",
   "scripts": {
