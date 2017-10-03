@@ -1,7 +1,7 @@
 # tsql
 A stupid stupid twitter client that uses sql commands to get tweets. Did I mention that this is totally stupid?
 
-`node tsql.js "select id, text, created_at from gilmae where id between 1 and 900000000000000000"`
+`./console.js select id, text, created_at from home where id between 1 and 900000000000000000 limit 10`
 
 ## What columns can I select
 Any property of the tweet. But cannot link into sub-objects.
@@ -31,3 +31,4 @@ Returns 2 rows, offset by 1
 TODO
 * Further parsing of WHERE clauses into timeline filters
 * Better Table joining. Should be able to handle LEF vs INNER joins
+* ORDER BY
