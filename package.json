@@ -1,8 +1,8 @@
 {
-  "name": "tsql",
+  "name": "twsql",
   "version": "0.0.1",
   "description": "Twitter client that uses sql commands rather than a stream",
-  "main": "tsql.js",
+  "main": "twsql.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

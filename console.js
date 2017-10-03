@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('console.table');
-const t = require('./tsql.js');
+const t = require('./twsql.js');
 const config = require('./.config')
 const sql = process.argv.slice(2).join(" ");
 const tsql = new t(config);
