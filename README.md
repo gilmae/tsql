@@ -19,7 +19,15 @@ Will always assume the first table mentioned is the desired timeline
 `include_retweets` is a boolean to filter retweets from the results.
 `exclude_replies` is a boolean to filter replies from the results.
 
+## LIMIT
+Uses the MySql syntax for limiting
+
+`LIMIT 2`
+Returns 2 rows.
+
+`LIMIT 1,2`
+Returns 2 rows, offset by 1
+
 TODO
 * Further parsing of WHERE clauses into timeline filters
 * Better Table joining. Should be able to handle LEF vs INNER joins
-* LIMIT

@@ -101,6 +101,16 @@ var Tsql = function (config) {
     {
       parseWhere(astObj.where, twit_options);
     }
+
+    let limitFrom = 0;
+    let limitTo = 200;
+
+    if (astObj.limit != null)
+    {
+      limitFrom = parseInt(astObj.limit[0].value);
+      limitTo = parseInt(astObj.limit[1].value);
+    }
+
     return new Promise(function(resolve, reject)
     {
 
@@ -127,6 +137,9 @@ var Tsql = function (config) {
 
           tweets = tweets.concat(tweet);
         }
+
+        tweets = tweets.slice(limitFrom, limitTo + limitFrom);
+
         for (var ii=0;ii<tweets.length;ii++)
         {
           var row = {};
