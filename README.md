@@ -1,6 +1,24 @@
 # tsql
 A stupid stupid twitter client that uses sql commands to get tweets. Did I mention that this is totally stupid?
 
+```
+const config = {
+  "twitter" : {
+    "consumer_key": "",
+    "consumer_secret": "",
+    "access_token": "",
+    "access_token_secret": ""
+  }
+}
+
+const t = require('./twsql.js');
+const tsql = new t(config);
+
+tsql.query("select id, text from home").then(function(data){
+  console.log(data);
+});
+```
+
 `./console.js select id, text, created_at from home where id between 1 and 900000000000000000 limit 10`
 
 ## What columns can I select
