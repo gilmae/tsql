@@ -2,8 +2,8 @@ let parse = require('node-sqlparser').parse;
 let Twit = require('twit')
 
 // Based on https://stackoverflow.com/a/43053803, but modified to do object merging
-const f = (a,b) => a.map(aa=> b.map(bb=>Object.assign(JSON.parse(JSON.stringify(aa)),JSON.parse(JSON.stringify(bb)))));
-const cartesian = (a,b) => [].concat.apply([],f(a,b));
+const f = (a,b, as) => a.map(aa=> b.map(bb=>Object.assign(JSON.parse(JSON.stringify(aa)),JSON.parse('{"' + as + '":' + JSON.stringify(bb)+ "}"))));
+const cartesian = (a,b, as) => [].concat.apply([],f(a,b, as));
 
 function toBoolean(value)
 {
@@ -115,9 +115,14 @@ var Tsql = function (config) {
     {
       const GetValue = (tweet, key) => {
         let subkeys = key.split('.');
-console.log(key);
-        if (subkeys.length == 1){
-          return tweet[key];
+        if (subkeys.length == 1)
+        {
+          if (tweet)
+          {
+            return tweet[key];
+          }
+          return null;
+
         }
         return GetValue(tweet[subkeys[0]], subkeys.slice(1).join('.'));
       }
@@ -134,12 +139,12 @@ console.log(key);
           {
             if (join_media && ot.entities.media && ot.entities.media.length > 0)
             {
-              tweet = cartesian(tweet,ot.entities.media);
+              tweet = cartesian(tweet,ot.entities.media, 'media');
             }
 
             if (join_media && ot.entities.hashtags && ot.entities.hashtags.length > 0)
             {
-              tweet = cartesian(tweet,ot.entities.hashtags);
+              tweet = cartesian(tweet,ot.entities.hashtags, 'hashtags');
             }
           }
 
