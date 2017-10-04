@@ -113,6 +113,14 @@ var Tsql = function (config) {
 
     return new Promise(function(resolve, reject)
     {
+      const GetValue = (tweet, key) => {
+        let subkeys = key.split('.');
+console.log(key);
+        if (subkeys.length == 1){
+          return tweet[key];
+        }
+        return GetValue(tweet[subkeys[0]], subkeys.slice(1).join('.'));
+      }
 
       self.T.get('statuses/user_timeline', twit_options, function(err, data, response)
       {
@@ -145,7 +153,19 @@ var Tsql = function (config) {
           var row = {};
           for (var ij=0;ij<astObj.columns.length;ij++)
           {
-            row[astObj.columns[ij].expr.column] = tweets[ii][astObj.columns[ij].expr.column];
+            let column = astObj.columns[ij].expr.column;
+
+            if (astObj.columns[ij].expr.table != "")
+            {
+               column = astObj.columns[ij].expr.table + "." + astObj.columns[ij].expr.column;
+            }
+
+            let column_name = column;
+
+            if (astObj.columns[ij].as && astObj.columns[ij].as != "") {
+              column_name = astObj.columns[ij].as;
+            }
+            row[column_name] = GetValue(tweets[ii], column);
           }
           table.push(row);
         }
