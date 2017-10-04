@@ -19,18 +19,33 @@ tsql.query("select id, text from home").then(function(data){
 });
 ```
 
-`./console.js select id, text, created_at from home where id between 1 and 900000000000000000 limit 10`
+or from the command line
+
+```
+chmod 755 console.js
+./console.js select id, text, created_at from home where id between 1 and 900000000000000000 limit 10
+```
 
 ## What columns can I select
-Any property of the tweet. But cannot link into sub-objects.
+Any property of the tweet. Can link into sub-objects as if they were joined tables. e.g.
+
+`select user.name from home`
+
+Child objects of the [Tweet object](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object) are implicitly 'joined'.
+
+Can use the `as` keyword to alias the columns.
 
 ## What 'tables'
 `home` is a protected keyword, just like on twitter.com, and uses the authenticated user's home timeline.
 Anything else is treated as a screen name and searches that user's tweets.
 
 ### What about joins?
-Can join media and hashtags. Fields on those tables are accessed as if part of the Tweet object. BEcause we can't link into sub-objects
-Will always assume the first table mentioned is the desired timeline
+Can join media and hashtags. Fields on those tables are accessed as if they are joined tables. e.g.
+`select media.media_url from home join media`
+or
+`select hashtags.text from home join hashtags`
+
+The timeline being queried will always be assumed to the first table in the from list.
 
 ## What filters can I use
 `id` can be filtered using `<`, `>`, and `between`.
@@ -48,5 +63,6 @@ Returns 2 rows, offset by 1
 
 TODO
 * Further parsing of WHERE clauses into timeline filters
-* Better Table joining. Should be able to handle LEF vs INNER joins
+* Better Table joining. Should be able to handle LEFT vs INNER joins
 * ORDER BY
+* The rest of the entities object, co-ordinates objects, and other sub-objects that are arrays.
