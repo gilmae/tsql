@@ -40,9 +40,12 @@ Can use the `as` keyword to alias the columns.
 Anything else is treated as a screen name and searches that user's tweets.
 
 ### What about joins?
-Can join media and hashtags. Fields on those tables are accessed as if they are joined tables. e.g.
+Can join any object inside entities. Fields on those tables are accessed as if they are joined tables. e.g.
+
 `select media.media_url from home join media`
+
 or
+
 `select hashtags.text from home join hashtags`
 
 The timeline being queried will always be assumed to the first table in the from list.
@@ -63,6 +66,8 @@ Returns 2 rows, offset by 1
 
 TODO
 * Further parsing of WHERE clauses into timeline filters
-* Better Table joining. Should be able to handle LEFT vs INNER joins
+* Better Table joining. Should be able to handle LEFT vs INNER joins.
+* Table aliasing
+* Joins that allow pulling up other entities, such as inside the retweeted_status object
 * ORDER BY
 * The rest of the entities object, co-ordinates objects, and other sub-objects that are arrays.
