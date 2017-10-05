@@ -36,6 +36,9 @@ function parseWhere(part, options)
             break;
         }
         break;
+      case "retweeted":
+        options.is_retweet = toBoolean(part.right.value);
+        break;
       case "include_retweets":
         switch (part.operator.toLowerCase())
         {
@@ -73,7 +76,7 @@ var Tsql = function (config) {
     let endpoint = "statuses/home_timeline";
 
     let table = []
-    let twit_options = {};
+    let twit_options = {count:200};
 
     if (astObj.from[0]['table'].toLowerCase() != "home")
     {
@@ -81,20 +84,11 @@ var Tsql = function (config) {
       twit_options.screen_name = astObj.from[0]['table'];
     }
 
-    let join_media = false;
-    let join_hashtags = false;
+    let joins = []
 
     for (var ii=1;ii<astObj.from.length;ii++)
     {
-      switch (astObj.from[ii]['table'].toLowerCase())
-      {
-        case "media":
-          join_media = true;
-          break;
-        case "hashtags":
-          join_hashtags = true;
-          break;
-      }
+        joins.push(astObj.from[ii]['table'].toLowerCase());
     }
 
     if (astObj.where != null)
@@ -127,8 +121,18 @@ var Tsql = function (config) {
         return GetValue(tweet[subkeys[0]], subkeys.slice(1).join('.'));
       }
 
+
+
       self.T.get('statuses/user_timeline', twit_options, function(err, data, response)
       {
+        if (twit_options.is_retweet != null)
+        {
+
+            data = data.filter((item)=>{
+              return toBoolean(item.retweeted) == twit_options.is_retweet;
+            })
+        }
+
         var tweets = [];
         for (var ii=0;ii<data.length;ii++)
         {
@@ -137,14 +141,13 @@ var Tsql = function (config) {
 
           if (ot.entities)
           {
-            if (join_media && ot.entities.media && ot.entities.media.length > 0)
+            for (var i_joinTable = 0;i_joinTable<joins.length;i_joinTable++)
             {
-              tweet = cartesian(tweet,ot.entities.media, 'media');
-            }
-
-            if (join_media && ot.entities.hashtags && ot.entities.hashtags.length > 0)
-            {
-              tweet = cartesian(tweet,ot.entities.hashtags, 'hashtags');
+                let join_table = joins[i_joinTable];
+                if (ot.entities[join_table] && ot.entities[join_table].length > 0)
+                {
+                  tweet = cartesian(tweet,ot.entities[join_table], join_table);
+                }
             }
           }
 
