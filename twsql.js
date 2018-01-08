@@ -78,10 +78,21 @@ var Tsql = function (config) {
     let table = []
     let twit_options = {count:200};
 
-    if (astObj.from[0]['table'].toLowerCase() != "home")
+    
+    switch (astObj.from[0]['table'].toLowerCase())
     {
-      endpoint = "statuses/user_timeline";
-      twit_options.screen_name = astObj.from[0]['table'];
+      case "home":
+        endpoint = "statuses/home_timeline";
+        break;
+      case "_faves":
+      case "_likes":
+      case "_favourites":
+      case "_hearts":
+        endpoint = "favorites/list"
+        break
+      default:
+        endpoint = "statuses/user_timeline";
+        twit_options.screen_name = astObj.from[0]['table'];
     }
 
     let joins = []
@@ -123,11 +134,10 @@ var Tsql = function (config) {
 
 
 
-      self.T.get('statuses/user_timeline', twit_options, function(err, data, response)
+      self.T.get(endpoint, twit_options, function(err, data, response)
       {
         if (twit_options.is_retweet != null)
         {
-
             data = data.filter((item)=>{
               return toBoolean(item.retweeted) == twit_options.is_retweet;
             })
